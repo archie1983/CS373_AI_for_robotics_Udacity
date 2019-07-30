@@ -22,14 +22,13 @@ def sense(p, Z):
     #
     q = []
     for i in range(len(world)):
-        if world[i] == Z:
-            q.append(p[i] * pHit)
-        else:
-            q.append(p[i] * pMiss)
-
-		# alternative solution:
-		# hit = (Z == world[i])
-		# q.append(p[i] * (hit * pHit + (1-hit) * pMiss))
+        hit = (Z == world[i])
+        q.append(p[i] * (hit * pHit + (1-hit) * pMiss))
+    
+    # Now normalisation
+    q_sum = sum(q)
+    for i in range(len(q)):
+        q[i] = q[i] / q_sum
     
     return q
 
