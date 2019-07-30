@@ -4,6 +4,6 @@
 # distribution over five grid cells, as expressed in a list of 
 # five probabilities.
 
-p = []
+p = [0.2, 0.2, 0.2, 0.2, 0.2]
 
 print p
