@@ -26,6 +26,10 @@ def sense(p, Z):
             q.append(p[i] * pHit)
         else:
             q.append(p[i] * pMiss)
+
+		# alternative solution:
+		# hit = (Z == world[i])
+		# q.append(p[i] * (hit * pHit + (1-hit) * pMiss))
     
     return q
 
