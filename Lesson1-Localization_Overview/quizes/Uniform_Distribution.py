@@ -17,4 +17,5 @@ for i in range(len(p)):
 	else:
 		p[i] = p[i] * pMiss
 
-print p
+print "Probability vector: %s" % p
+print "Probability sum: %s" % sum(p)
