@@ -1,14 +1,13 @@
 #!/usr/bin/python
-#Modify the code below so that the function sense, which 
-#takes p and Z as inputs, will output the NON-normalized 
-#probability distribution, q, after multiplying the entries 
-#in p by pHit or pMiss according to the color in the 
-#corresponding cell in world.
+#Modify the code so that it updates the probability twice
+#and gives the posterior distribution after both 
+#measurements are incorporated. Make sure that your code 
+#allows for any sequence of measurement of any length.
 
 
 p=[0.2, 0.2, 0.2, 0.2, 0.2]
 world=['green', 'red', 'red', 'green', 'green']
-Z = 'red'
+measurements = ['red', 'green']
 pHit = 0.6
 pMiss = 0.2
 
@@ -32,4 +31,7 @@ def sense(p, Z):
     
     return q
 
-print sense(p,Z)
+# applying the measured result to the probability vector:
+for i in range(len(measurements)):
+    p = sense(p, measurements[i])
+print p
