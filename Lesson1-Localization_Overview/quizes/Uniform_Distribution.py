@@ -1,21 +1,32 @@
 #!/usr/bin/python
-#Write code that outputs p after multiplying each entry 
-#by pHit or pMiss at the appropriate places. Remember that
-#the red cells 1 and 2 are hits and the other green cells
-#are misses.
+#Modify the code below so that the function sense, which 
+#takes p and Z as inputs, will output the NON-normalized 
+#probability distribution, q, after multiplying the entries 
+#in p by pHit or pMiss according to the color in the 
+#corresponding cell in world.
 
 
-p=[0.2,0.2,0.2,0.2,0.2]
+p=[0.2, 0.2, 0.2, 0.2, 0.2]
+world=['green', 'red', 'red', 'green', 'green']
+Z = 'red'
 pHit = 0.6
 pMiss = 0.2
 
-#Enter code here
+def sense(p, Z):
+    #
+    # AE: So we have a probability vector p and we
+    # have measured state Z. We now want to change
+    # p in such a way that it will reflect the new
+    # probability vector given the measurement, but
+    # before normalisation.
+    #
+    q = []
+    for i in range(len(world)):
+        if world[i] == Z:
+            q.append(p[i] * pHit)
+        else:
+            q.append(p[i] * pMiss)
+    
+    return q
 
-for i in range(len(p)):
-	if i == 1 or i == 2:
-		p[i] = p[i] * pHit
-	else:
-		p[i] = p[i] * pMiss
-
-print "Probability vector: %s" % p
-print "Probability sum: %s" % sum(p)
+print sense(p,Z)
