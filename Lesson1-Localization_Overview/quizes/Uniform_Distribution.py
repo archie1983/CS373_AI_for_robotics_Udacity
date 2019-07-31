@@ -10,6 +10,10 @@ measurements = ['red', 'green']
 pHit = 0.6
 pMiss = 0.2
 
+pExact = 0.8
+pOvershoot = 0.1
+pUndershoot = 0.1
+
 def sense(p, Z):
     #
     # AE: So we have a probability vector p and we
@@ -33,9 +37,15 @@ def sense(p, Z):
 #Program a function that returns a new distribution 
 #q, shifted to the right by U units. If U=0, q should 
 #be the same as p.
+#Modify the move function to accommodate the added 
+#probabilities of overshooting or undershooting 
+#the intended destination.
 def move(p, U):
-    U = U % len(p)
-    q = p[-U:] + p[:-U]
+    #U = U % len(p)
+    #q = p[-U:] + p[:-U]
+    q = []
+    for i in range(len(p)):
+        q.append(p[(i-U)%len(p)])
     return q
 
 print move(p, 1)
