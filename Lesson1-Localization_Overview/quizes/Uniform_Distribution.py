@@ -4,8 +4,7 @@
 #measurements are incorporated. Make sure that your code 
 #allows for any sequence of measurement of any length.
 
-
-p=[0.2, 0.2, 0.2, 0.2, 0.2]
+p=[1, 2, 3, 4, 5]
 world=['green', 'red', 'red', 'green', 'green']
 measurements = ['red', 'green']
 pHit = 0.6
@@ -31,6 +30,16 @@ def sense(p, Z):
     
     return q
 
+#Program a function that returns a new distribution 
+#q, shifted to the right by U units. If U=0, q should 
+#be the same as p.
+def move(p, U):
+    U = U % len(p)
+    q = p[-U:] + p[:-U]
+    return q
+
+print move(p, 1)
+    
 # applying the measured result to the probability vector:
 for i in range(len(measurements)):
     p = sense(p, measurements[i])
