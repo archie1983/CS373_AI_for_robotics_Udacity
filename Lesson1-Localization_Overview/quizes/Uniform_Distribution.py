@@ -4,7 +4,7 @@
 #measurements are incorporated. Make sure that your code 
 #allows for any sequence of measurement of any length.
 
-p=[1, 2, 3, 4, 5]
+p=[0, 1, 0, 0, 0]
 world=['green', 'red', 'red', 'green', 'green']
 measurements = ['red', 'green']
 pHit = 0.6
@@ -45,10 +45,15 @@ def move(p, U):
     #q = p[-U:] + p[:-U]
     q = []
     for i in range(len(p)):
-        q.append(p[(i-U)%len(p)])
+        old_val_u = p[(i-U)%len(p)]
+        old_val_prev_u = p[(i-U-1)%len(p)]
+        old_val_prev_post_u = p[(i-U+1)%len(p)]
+
+        new_val = old_val_u * pExact + old_val_prev_u * pUndershoot + old_val_prev_post_u * pOvershoot
+        q.append(new_val)
     return q
 
-print move(p, 1)
+print move(p, 2)
     
 # applying the measured result to the probability vector:
 for i in range(len(measurements)):
