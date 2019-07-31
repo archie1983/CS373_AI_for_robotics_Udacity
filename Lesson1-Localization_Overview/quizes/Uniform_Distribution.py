@@ -46,10 +46,10 @@ def move(p, U):
     q = []
     for i in range(len(p)):
         old_val_u = p[(i-U)%len(p)]
-        old_val_prev_u = p[(i-U-1)%len(p)]
-        old_val_prev_post_u = p[(i-U+1)%len(p)]
+        old_val_prev_u = p[(i-U+1)%len(p)]
+        old_val_post_u = p[(i-U-1)%len(p)]
 
-        new_val = old_val_u * pExact + old_val_prev_u * pUndershoot + old_val_prev_post_u * pOvershoot
+        new_val = old_val_u * pExact + old_val_prev_u * pUndershoot + old_val_post_u * pOvershoot
         q.append(new_val)
     return q
 
