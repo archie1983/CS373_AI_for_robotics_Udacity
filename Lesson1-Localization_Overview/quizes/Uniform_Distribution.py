@@ -59,3 +59,6 @@ print move(p, 2)
 for i in range(len(measurements)):
     p = sense(p, measurements[i])
 print p
+
+# printing what the world will look like if robot moves twice without anymore sensing
+print move(move(p, 1),1)
