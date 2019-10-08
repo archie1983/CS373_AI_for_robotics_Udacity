@@ -62,3 +62,8 @@ print p
 
 # printing what the world will look like if robot moves twice without anymore sensing
 print move(move(p, 1),1)
+
+# Now move 1000 times and see how certainty decays to uniform distribution of 0.2
+for i in range(1000):
+    p = move(p, 1)
+print p
