@@ -43,14 +43,20 @@ def sense(p, Z):
 #Modify the move function to accommodate the added 
 #probabilities of overshooting or undershooting 
 #the intended destination.
+#
+# NOTE: What we shift here is the p -- THE WORLD and NOT THE POSITION OF ROBOT
+#
 def move(p, U):
     #U = U % len(p)
     #q = p[-U:] + p[:-U]
     q = []
     for i in range(len(p)):
-        old_val_u = p[(i-U)%len(p)]
-        old_val_prev_u = p[(i-U+1)%len(p)]
-        old_val_post_u = p[(i-U-1)%len(p)]
+        # so robot moves to the right if U is positive and to the left if it's negative. Or we can say that robot stays where it was, but the world shifts
+        # either to the left if U is positive or right if U is negative.
+        
+        old_val_u = p[(i-U)%len(p)] # the cell to look at if we started at i and the whole world shifted to the opposite direction of robot movement.
+        old_val_prev_u = p[(i-U+1)%len(p)] # the cell to look at if we started at i and undershot by 1
+        old_val_post_u = p[(i-U-1)%len(p)] # the cell to look at if we started at i and overshot by 1
 
         new_val = old_val_u * pExact + old_val_prev_u * pUndershoot + old_val_post_u * pOvershoot
         q.append(new_val)
