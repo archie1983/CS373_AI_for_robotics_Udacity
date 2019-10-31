@@ -157,12 +157,16 @@ def kalman_filter(x, P):
         P = (I - K * H) * P
         print "update : "
         x.show()
+        print "P: "
+        P.show()
         
         # prediction (of where we should end up in the next (not this, but next) step)
         x = F * x + u
         P = F * P * F.transpose()
         print "predict : "
         x.show()
+        print "P: "
+        P.show()
         
     return x,P
 
@@ -180,33 +184,109 @@ H = matrix([[1., 0.]]) # measurement function - a.k.a. the vector that we use fo
 R = matrix([[1.]]) # measurement uncertainty
 I = matrix([[1., 0.], [0., 1.]]) # identity matrix
 
-
+print "very first P: "
+P.show()
+        
 print(kalman_filter(x, P))
 # output should be:
 # x: [[3.9996664447958645], [0.9999998335552873]]
 # P: [[2.3318904241194827, 0.9991676099921091], [0.9991676099921067, 0.49950058263974184]]
 
-# print "matrix H * x: "
-# x = H * x
-# x.show()
-# print "x[0]: ", x.value[0][0]
-
-# print "matrix F * x: "
-# x = F * x
-# x.show()
-
-# a = matrix([[10.],[.10]])
-# print "matrix a: "
-# a.show()
-
-# b = a.transpose()
-# print "matrix a.transpose: "
-# b.show()
-
-# ff = matrix([[12., 8.],[6., 2.]])
-# print "matrix ff: "
-# ff.show()
-
-# b = ff * a
-# print "matrix F * a: "
-# b.show()
+## What I'm getting is really awesome:
+#
+## So we start at position=0 and speed=0 : x = matrix([[0.], [0.]])
+## Covariance is very very uncertain (1000 uncertainty for location and same for speed) : P = matrix([[1000., 0.], [0., 1000.]])
+#
+## Now we take in a measurement of location (first measurement is 1)
+#
+#update :
+#[0.9990009990009988]
+#[0.0]
+#
+## And low and behold our idea of location is now very close to 1 (not exactly 1, because even though at high uncertainty,
+## but still we thought we were at 0 before this measurement)
+## Since we only have taken 1 measurement so far, we can't know the speed, so that is still 0
+##
+#P:
+#[0.9990009990011872, 0.0]
+#[0.0, 1000.0]
+##
+## And our uncertainty covariance after this measurement says that we're a lot more confident about our location 
+## ([0.9990009990011872, 0.0]), but as for speed we're just a unconvinced as before ([0.0, 1000.0])
+##
+## Now we'll try to predict where we'll be in the next step (where we're heading)
+#
+#predict :
+#[0.9990009990009988]
+#[0.0]
+#
+## And since we've only taken 1 measurement so far, we can't know the speed any better than before and based on that
+## we think that we'll stay at the same place.
+##
+#P:
+#[1000.9990009990012, 1000.0]
+#[1000.0, 1000.0]
+##
+## And the uncertainty about such prediction is still very high for both - the speed and the location
+##
+## Now let's take in the next update with a new position (this time 2)
+#
+#update :
+#[1.9990009980049868]
+#[0.9990019950129659]
+#
+## So we measured 2, right? That means that we're very close to location 2 (remember there's still tiny residue of 
+## previous very uncertain location of 0).
+## And the speed must be very close to 1, since we were at location 1 before and are now at location 2 (after 1 time step)
+## 
+#P:
+#[0.9990019950130065, 0.9980049870339514]
+#[0.9980049870339371, 1.9950129660888933]
+##
+## And our uncertainty covariance after this measurement is much lower for both speed and location
+##
+## Now let's see where we think we'll end up in the next step if we carry on like this.
+#
+#predict :
+#[2.998002993017953]
+#[0.9990019950129659]
+#
+## And according to the data that we have, we will be at location 3 (or very close to 3) and our speed should still be about 1.
+##
+#P:
+#[4.990024935169789, 2.9930179531228447]
+#[2.9930179531228305, 1.9950129660888933]
+##
+## And our uncertainty for this prediction is slightly higher than after measurement, but we're now much more confident that at
+## the beginning
+##
+## Now let's take in the next (and in the homework case - the final measurement) - measurement of location 3
+#
+#update :
+#[2.999666611240577]
+#[0.9999998335552873]
+#
+## So yes, we're at 3 and our speed is still 1
+##
+#P:
+#[0.8330557867750087, 0.49966702735236723]
+#[0.4996670273523649, 0.49950058263974184]
+##
+## We're also getting more confident.
+##
+## And what do we think about next step if we carry on like this?
+#
+#predict :
+#[3.9996664447958645]
+#[0.9999998335552873]
+#
+## We think that we'll end up at location 4 and speed will still be 1.
+##
+#P:
+#[2.3318904241194827, 0.9991676099921091]
+#[0.9991676099921067, 0.49950058263974184]
+##
+## And the uncertainty for this kind of prediction of movement is now getting closer and closer to the uncertainty that we 
+## get from measurement.
+##
+## AND THAT IS MASSIVELY COOL :)
