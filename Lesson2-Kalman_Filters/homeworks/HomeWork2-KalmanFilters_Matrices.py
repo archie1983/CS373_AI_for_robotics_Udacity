@@ -227,7 +227,9 @@ print(kalman_filter(x, P))
 #[1000.9990009990012, 1000.0]
 #[1000.0, 1000.0]
 ##
-## And the uncertainty about such prediction is still very high for both - the speed and the location
+## And the uncertainty about such prediction is still very high for both - the speed and the location. Also though we now have
+## some (albeit uncertain) correlaction between location and speed (the second member in first row - 1000 for location and the
+## first member in second row - 100 for speed).
 ##
 ## Now let's take in the next update with a new position (this time 2)
 #
@@ -243,7 +245,8 @@ print(kalman_filter(x, P))
 #[0.9990019950130065, 0.9980049870339514]
 #[0.9980049870339371, 1.9950129660888933]
 ##
-## And our uncertainty covariance after this measurement is much lower for both speed and location
+## And our uncertainty covariance after this measurement is much lower for both speed and location. Also correlation is now much
+## more certain: 0.9980049870339514 and 0.9980049870339371.
 ##
 ## Now let's see where we think we'll end up in the next step if we carry on like this.
 #
@@ -258,7 +261,7 @@ print(kalman_filter(x, P))
 #[2.9930179531228305, 1.9950129660888933]
 ##
 ## And our uncertainty for this prediction is slightly higher than after measurement, but we're now much more confident that at
-## the beginning
+## the beginning. Slight loss of correlation certainty: 2.9930179531228447 and 2.9930179531228305
 ##
 ## Now let's take in the next (and in the homework case - the final measurement) - measurement of location 3
 #
@@ -272,7 +275,8 @@ print(kalman_filter(x, P))
 #[0.8330557867750087, 0.49966702735236723]
 #[0.4996670273523649, 0.49950058263974184]
 ##
-## We're also getting more confident.
+## We're also getting more confident for all - the speed and location (0.8330557867750087 and 0.49950058263974184) and
+## correlation between speed and location (0.49966702735236723 and 0.4996670273523649).
 ##
 ## And what do we think about next step if we carry on like this?
 #
