@@ -155,15 +155,15 @@ def filter(x, P):
         
         # measurement update
         Z = matrix([measurements[n]])
-        # print "Z:"
-        # Z.show()
-        # print "H:"
-        # H.show()
-        # print "x:"
-        # x.show()
-        # print "Hx:"
-        # Hx = H * x
-        # Hx.show()
+        print "Z:"
+        Z.show()
+        print "H:"
+        H.show()
+        print "x:"
+        x.show()
+        print "Hx:"
+        Hx = H * x
+        Hx.show()
         y = Z.transpose() - (H * x)
         S = H * P * H.transpose() + R
         K = P * H.transpose() * S.inverse()
@@ -196,18 +196,12 @@ u = matrix([[0.], [0.], [0.], [0.]]) # external motion
 #### DO NOT MODIFY ANYTHING ABOVE HERE ####
 #### fill this in, remember to use the matrix() function!: ####
 
-P =  matrix([[1000., 1000., 0., 0.], 
-             [0, 1000, 1000., 0.], 
-             [0, 0, 1000, 1000], 
-             [0, 1000, 1000, 0]]) # initial uncertainty: 0 for positions x and y, 1000 for the two velocities
-P =  matrix([[1000, 0, 1000, 0], 
-             [0, 1000, 1000, 0], 
-             [1000, 0, 1000, 0], 
-             [0, 1000, 1000, 0]]) # initial uncertainty: 0 for positions x and y, 1000 for the two velocities
-P =  matrix([[1000., 0., 0., 0.], 
-             [0., 1000., 0., 0.], 
-             [0., 0., 1000., 0.], 
-             [0., 0., 0., 1000.]]) # initial uncertainty: 0 for positions x and y, 1000 for the two velocities
+# initial uncertainty: 0 for positions x and y, 1000 for the two velocities
+P =  matrix([[0., 0., 0., 0.], # x does not correlate with itself nor y nor xdot nor ydot
+             [0., 0., 0., 0.], # y does not correlate with x nor itself, nor xdot nor ydot
+             [0., 0., 1000., 0.], # xdot (x component of speed) does not corelate with x nor y, but does corelate with itself, doesn't with ydot
+             [0., 0., 0., 1000.]]) # ydot (y component of speed) does not corelate with x nor y nor xdot, but does corelate with itself
+             
 F =  matrix([[1., 0., dt, 0.], 
              [0., 1., 0., dt], 
              [0., 0., 1., 0.], 
