@@ -149,20 +149,20 @@ class matrix:
 def kalman_filter(x, P):
     for n in range(len(measurements)):
         
-        # measurement update (sensor reading)
+        # measurement update (sensor reading of where we are in this step)
         y = matrix([[measurements[n]]]) - H * x
         S = H * P * H.transpose() + R
         K = P * H.transpose() * S.inverse()
         x = x + (K * y)
         P = (I - K * H) * P
-        
         print "update : "
         x.show()
         
-        # prediction (movement)
-        #[mu, sig] = predict(mu, sig, motion[i], motion_sig)
-        #x = x * H
-        print "predict : ", mu, sig
+        # prediction (of where we should end up in the next (not this, but next) step)
+        x = F * x + u
+        P = F * P * F.transpose()
+        print "predict : "
+        x.show()
         
     return x,P
 
@@ -182,10 +182,14 @@ I = matrix([[1., 0.], [0., 1.]]) # identity matrix
 
 
 print(kalman_filter(x, P))
-print "matrix H * x: "
-x = H * x
-x.show()
-print "x[0]: ", x.value[0][0]
+# output should be:
+# x: [[3.9996664447958645], [0.9999998335552873]]
+# P: [[2.3318904241194827, 0.9991676099921091], [0.9991676099921067, 0.49950058263974184]]
+
+# print "matrix H * x: "
+# x = H * x
+# x.show()
+# print "x[0]: ", x.value[0][0]
 
 # print "matrix F * x: "
 # x = F * x
@@ -206,7 +210,3 @@ print "x[0]: ", x.value[0][0]
 # b = ff * a
 # print "matrix F * a: "
 # b.show()
-
-# output should be:
-# x: [[3.9996664447958645], [0.9999998335552873]]
-# P: [[2.3318904241194827, 0.9991676099921091], [0.9991676099921067, 0.49950058263974184]]
