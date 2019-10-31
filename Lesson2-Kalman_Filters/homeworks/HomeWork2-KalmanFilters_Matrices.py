@@ -149,9 +149,20 @@ class matrix:
 def kalman_filter(x, P):
     for n in range(len(measurements)):
         
-        # measurement update
-
-        # prediction
+        # measurement update (sensor reading)
+        y = matrix([[measurements[n]]]) - H * x
+        S = H * P * H.transpose() + R
+        K = P * H.transpose() * S.inverse()
+        x = x + (K * y)
+        P = (I - K * H) * P
+        
+        print "update : "
+        x.show()
+        
+        # prediction (movement)
+        #[mu, sig] = predict(mu, sig, motion[i], motion_sig)
+        #x = x * H
+        print "predict : ", mu, sig
         
     return x,P
 
@@ -161,15 +172,41 @@ def kalman_filter(x, P):
 
 measurements = [1, 2, 3]
 
-x = matrix([[0.], [0.]]) # initial state (location and velocity)
-P = matrix([[1000., 0.], [0., 1000.]]) # initial uncertainty
+x = matrix([[0.], [0.]]) # initial state (location and velocity) - a.k.a. the mean or mu variable (in 1D Gaussian)
+P = matrix([[1000., 0.], [0., 1000.]]) # initial uncertainty - a.k.a. the covariance or in 1D Gaussian - the variance or sigma squared
 u = matrix([[0.], [0.]]) # external motion
-F = matrix([[1., 1.], [0, 1.]]) # next state function
-H = matrix([[1., 0.]]) # measurement function
+F = matrix([[1., 1.], [0, 1.]]) # next state function - a.k.a. state transition function - the matrix that we multiply current state with to get to the next state
+H = matrix([[1., 0.]]) # measurement function - a.k.a. the vector that we use for updating measurement - we update location (hence first element is 1) and we don't update speed (hence second element is 0)
 R = matrix([[1.]]) # measurement uncertainty
 I = matrix([[1., 0.], [0., 1.]]) # identity matrix
 
+
 print(kalman_filter(x, P))
+print "matrix H * x: "
+x = H * x
+x.show()
+print "x[0]: ", x.value[0][0]
+
+# print "matrix F * x: "
+# x = F * x
+# x.show()
+
+# a = matrix([[10.],[.10]])
+# print "matrix a: "
+# a.show()
+
+# b = a.transpose()
+# print "matrix a.transpose: "
+# b.show()
+
+# ff = matrix([[12., 8.],[6., 2.]])
+# print "matrix ff: "
+# ff.show()
+
+# b = ff * a
+# print "matrix F * a: "
+# b.show()
+
 # output should be:
 # x: [[3.9996664447958645], [0.9999998335552873]]
 # P: [[2.3318904241194827, 0.9991676099921091], [0.9991676099921067, 0.49950058263974184]]
