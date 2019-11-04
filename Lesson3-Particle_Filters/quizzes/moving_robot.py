@@ -147,3 +147,13 @@ myrobot = myrobot.move(-pi / 2, 15)
 print myrobot.sense()
 myrobot = myrobot.move(-pi / 2, 10)
 print myrobot.sense()
+
+# Generating 1000 random points (particles) - initial possible robot locations
+N = 1000
+p = []
+
+#enter code here
+for i in range(N):
+    p.append(robot())
+
+print len(p)
