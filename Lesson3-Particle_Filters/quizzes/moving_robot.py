@@ -148,25 +148,43 @@ print myrobot.sense()
 myrobot = myrobot.move(-pi / 2, 10)
 print myrobot.sense()
 
+# Having played with myrobot, we'll re-initialise it and move it to a certain place.
+# We will then take a measurement from the landmarks and compare that measurement with
+# 1000 other random points that have moved by the same amount.
+myrobot = robot()
+myrobot = myrobot.move(0.1, 5.0)
+Z = myrobot.sense()
+
 # Generating 1000 random points (particles) - initial possible robot locations
 N = 1000
 p = []
 
-#enter code here
 for i in range(N):
     p.append(robot())
 
-print len(p)
+#print len(p)
 
 # Now we want to simulate robot
 # motion with our particles.
 # Each particle should turn by 0.1
-# and then move by 5.
+# and then move by 5 - same as myrobot
+# in the beginning.
 p2 = []
 for i in range(N):
     r = p[i]
+    r.set_noise(0.05, 0.05, 5.0) # we need some measurement, move and turn noise, otherwise weight calculation with measurement_prob(...) will give division by 0
     p2.append(r.move(0.1, 5))
 
 p = p2
 
-print p
+#print p
+
+# Now we want to give weight to our 
+# particles. This code will assign weights
+# to 1000 particles in the list.
+w = []
+for i in range(N):
+    measurement_probability = p[i].measurement_prob(Z)
+    w.append(measurement_probability)
+
+print w
