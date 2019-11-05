@@ -187,4 +187,18 @@ for i in range(N):
     measurement_probability = p[i].measurement_prob(Z)
     w.append(measurement_probability)
 
-print w
+#print w # we see that most of the particles have a very low (to the power of -<large number>) probability. We'll need to drop those and keep ones with higher probability.
+
+# In this exercise, try to write a program that
+# will resample particles according to their weights.
+# Particles with higher weights should be sampled
+# more frequently (in proportion to their weight).
+p3 = []
+
+w_total = sum(w) # total W
+norm_w = [wn / w_total for wn in w] # normalized weights
+
+from numpy.random import choice
+p3 = choice(p, len(p), p=norm_w, replace=True)
+
+print p3
