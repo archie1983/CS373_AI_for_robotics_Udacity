@@ -116,76 +116,130 @@ def eval(r, p):
 
 ####   DON'T MODIFY ANYTHING ABOVE HERE! ENTER CODE BELOW ####
 
-myrobot = robot()
+def play_around_with_robot():
+    myrobot = robot()
 
-# Make a robot called myrobot that starts at
-# coordinates 30, 50 heading north (pi/2).
-# Have your robot turn clockwise by pi/2, move
-# 15 m, and sense. Then have it turn clockwise
-# by pi/2 again, move 10 m, and sense again.
-myrobot.set(30, 50, pi / 2)
-#print myrobot.sense()
-myrobot = myrobot.move(-pi / 2, 15)
-print myrobot.sense()
-myrobot = myrobot.move(-pi / 2, 10)
-print myrobot.sense()
+    # Make a robot called myrobot that starts at
+    # coordinates 30, 50 heading north (pi/2).
+    # Have your robot turn clockwise by pi/2, move
+    # 15 m, and sense. Then have it turn clockwise
+    # by pi/2 again, move 10 m, and sense again.
+    myrobot.set(30, 50, pi / 2)
+    print myrobot.sense()
+    myrobot = myrobot.move(-pi / 2, 15)
+    print myrobot.sense()
+    myrobot = myrobot.move(-pi / 2, 10)
+    print myrobot.sense()
 
-# Now add noise to your robot as follows:
-# forward_noise = 5.0, turn_noise = 0.1,
-# sense_noise = 5.0.
-#
-# Once again, your robot starts at 30, 50,
-# heading north (pi/2), then turns clockwise
-# by pi/2, moves 15 meters, senses,
-# then turns clockwise by pi/2 again, moves
-# 10 m, then senses again.
-myrobot = robot()
-myrobot.set_noise(5.0, 0.1, 5.0)
-myrobot.set(30, 50, pi / 2)
-#print myrobot.sense()
-myrobot = myrobot.move(-pi / 2, 15)
-print myrobot.sense()
-myrobot = myrobot.move(-pi / 2, 10)
-print myrobot.sense()
+    # Now add noise to your robot as follows:
+    # forward_noise = 5.0, turn_noise = 0.1,
+    # sense_noise = 5.0.
 
-# Having played with myrobot, we'll re-initialise it and move it to a certain place.
-# We will then take a measurement from the landmarks and compare that measurement with
+    # Once again, your robot starts at 30, 50,
+    # heading north (pi/2), then turns clockwise
+    # by pi/2, moves 15 meters, senses,
+    # then turns clockwise by pi/2 again, moves
+    # 10 m, then senses again.
+    myrobot = robot()
+    myrobot.set_noise(5.0, 0.1, 5.0)
+    myrobot.set(30, 50, pi / 2)
+    print myrobot.sense()
+    myrobot = myrobot.move(-pi / 2, 15)
+    print myrobot.sense()
+    myrobot = myrobot.move(-pi / 2, 10)
+    print myrobot.sense()
+
+def move_and_sense(robot, movement):
+    # Now our main robot moves and senses it's position relative to the landmarks.
+    robot = robot.move(movement[0], movement[1])
+    Z = robot.sense()
+    return (Z, robot)
+
+def move_particles(particles, movement):
+    # Now we want to simulate robot
+    # motion with our particles.
+    # Each particle should turn by 0.1
+    # and then move by 5 - same as myrobot.
+    p2 = []
+    for i in range(len(particles)):
+        r = particles[i]
+        p2.append(r.move(movement[0], movement[1]))
+    return p2
+
+def get_weights_of_particles(particles, base_measurement):
+    # Now we want to give weight to our 
+    # particles. This code will assign weights
+    # to 1000 particles in the list.
+    w = []
+    for i in range(len(particles)):
+        measurement_probability = particles[i].measurement_prob(base_measurement)
+        w.append(measurement_probability)
+    return w
+
+def resample_particles(particles, weights):
+    # In this exercise, try to write a program that
+    # will resample particles according to their weights.
+    # Particles with higher weights should be sampled
+    # more frequently (in proportion to their weight).
+    p3 = []
+
+    w_total = sum(weights) # total W
+    norm_w = [wn / w_total for wn in weights] # normalized weights
+
+    #from numpy.random import choice
+    #p3 = choice(p, len(p), p=norm_w, replace=True)
+
+    # Now let's implement a choice based on weights, but not with numpy. We don't even need to normalize for that.
+    max_w = max(weights)
+    index = random.randrange(0, len(particles), 1) # or index = int(random.random() * N)
+    beta = 0.0
+    p3 = []
+    for i in range(len(particles)):
+        beta = beta + random.uniform(0, 2 * max_w) # or beta += random.random() * 2.0 * mw
+        while weights[index] < beta:
+            beta = beta - weights[index]
+            index = (index + 1) % N
+        p3.append(particles[index])
+    return p3
+
+
+#play_around_with_robot()
+
+# Having played with the robot, we'll now create one that we'll work with. We will also
+# create 1000 points (other - virtual - robots) at random coordinates. We'll move those
+# points same as our main robot and then see how their distances to the landmarks match
+# our main robot's distances.
+# We will take a measurement from the landmarks and compare that measurement with
 # 1000 other random points that have moved by the same amount.
 myrobot = robot()
-myrobot = myrobot.move(0.1, 5.0)
-Z = myrobot.sense()
+
+# This is how we'll move our robot (and the points - or particles)
+default_movement = (0.1, 5)
 
 # Generating 1000 random points (particles) - initial possible robot locations
 N = 1000
 p = []
-
+Z = []
 for i in range(N):
-    p.append(robot())
+    r = robot()
+    r.set_noise(0.05, 0.05, 5.0) # we need some measurement, move and turn noise, otherwise weight calculation with measurement_prob(...) will give division by 0
+    p.append(r)
 
-#print len(p)
+# Now our main robot moves and senses it's position relative to the landmarks.
+(Z, myrobot) = move_and_sense(myrobot, default_movement)
 
 # Now we want to simulate robot
 # motion with our particles.
 # Each particle should turn by 0.1
-# and then move by 5 - same as myrobot
-# in the beginning.
-p2 = []
-for i in range(N):
-    r = p[i]
-    r.set_noise(0.05, 0.05, 5.0) # we need some measurement, move and turn noise, otherwise weight calculation with measurement_prob(...) will give division by 0
-    p2.append(r.move(0.1, 5))
-
-p = p2
+# and then move by 5 - same as myrobot.
+p = move_particles(p, default_movement)
 
 #print p
 
 # Now we want to give weight to our 
 # particles. This code will assign weights
 # to 1000 particles in the list.
-w = []
-for i in range(N):
-    measurement_probability = p[i].measurement_prob(Z)
-    w.append(measurement_probability)
+w = get_weights_of_particles(p, Z)
 
 #print w # we see that most of the particles have a very low (to the power of -<large number>) probability. We'll need to drop those and keep ones with higher probability.
 
@@ -193,25 +247,6 @@ for i in range(N):
 # will resample particles according to their weights.
 # Particles with higher weights should be sampled
 # more frequently (in proportion to their weight).
-p3 = []
+p = resample_particles(p, w)
 
-w_total = sum(w) # total W
-norm_w = [wn / w_total for wn in w] # normalized weights
-
-#from numpy.random import choice
-#p3 = choice(p, len(p), p=norm_w, replace=True)
-
-# Now let's implement a choice based on weights, but not with numpy. We don't even need to normalize for that.
-max_w = max(w)
-index = random.randrange(0, N, 1) # or index = int(random.random() * N)
-beta = 0.0
-p3 = []
-for i in range(N):
-    beta = beta + random.uniform(0, 2 * max_w) # or beta += random.random() * 2.0 * mw
-    while w[index] < beta:
-        beta = beta - w[index]
-        index = (index + 1) % N
-    p3.append(p[index])
-p = p3
-
-print p3
+print p
