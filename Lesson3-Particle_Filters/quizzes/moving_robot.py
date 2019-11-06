@@ -225,28 +225,31 @@ for i in range(N):
     r.set_noise(0.05, 0.05, 5.0) # we need some measurement, move and turn noise, otherwise weight calculation with measurement_prob(...) will give division by 0
     p.append(r)
 
-# Now our main robot moves and senses it's position relative to the landmarks.
-(Z, myrobot) = move_and_sense(myrobot, default_movement)
+# Now we'll move, sense, weight and re-sample particles a few times
+T = 10
+for i in range(T):
+    # Now our main robot moves and senses it's position relative to the landmarks.
+    (Z, myrobot) = move_and_sense(myrobot, default_movement)
 
-# Now we want to simulate robot
-# motion with our particles.
-# Each particle should turn by 0.1
-# and then move by 5 - same as myrobot.
-p = move_particles(p, default_movement)
+    # Now we want to simulate robot
+    # motion with our particles.
+    # Each particle should turn by 0.1
+    # and then move by 5 - same as myrobot.
+    p = move_particles(p, default_movement)
 
-#print p
+    #print p
 
-# Now we want to give weight to our 
-# particles. This code will assign weights
-# to 1000 particles in the list.
-w = get_weights_of_particles(p, Z)
+    # Now we want to give weight to our 
+    # particles. This code will assign weights
+    # to 1000 particles in the list.
+    w = get_weights_of_particles(p, Z)
 
-#print w # we see that most of the particles have a very low (to the power of -<large number>) probability. We'll need to drop those and keep ones with higher probability.
+    #print w # we see that most of the particles have a very low (to the power of -<large number>) probability. We'll need to drop those and keep ones with higher probability.
 
-# In this exercise, try to write a program that
-# will resample particles according to their weights.
-# Particles with higher weights should be sampled
-# more frequently (in proportion to their weight).
-p = resample_particles(p, w)
+    # In this exercise, try to write a program that
+    # will resample particles according to their weights.
+    # Particles with higher weights should be sampled
+    # more frequently (in proportion to their weight).
+    p = resample_particles(p, w)
 
 print p
