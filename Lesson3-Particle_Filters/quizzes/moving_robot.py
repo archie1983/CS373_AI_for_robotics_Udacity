@@ -198,8 +198,8 @@ p3 = []
 w_total = sum(w) # total W
 norm_w = [wn / w_total for wn in w] # normalized weights
 
-from numpy.random import choice
-p3 = choice(p, len(p), p=norm_w, replace=True)
+#from numpy.random import choice
+#p3 = choice(p, len(p), p=norm_w, replace=True)
 
 # Now let's implement a choice based on weights, but not with numpy. We don't even need to normalize for that.
 max_w = max(w)
@@ -212,5 +212,6 @@ for i in range(N):
         beta = beta - w[index]
         index = (index + 1) % N
     p3.append(p[index])
+p = p3
 
 print p3
