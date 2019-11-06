@@ -242,6 +242,7 @@ for i in range(N):
 
 # Now we'll move, sense, weight and re-sample particles a few times
 T = 10
+print "quality of model before work: ", eval(myrobot, p)
 for i in range(T):
     # Now our main robot moves and senses it's position relative to the landmarks.
     (Z, myrobot) = move_and_sense(myrobot, default_movement)
@@ -267,6 +268,6 @@ for i in range(T):
     # more frequently (in proportion to their weight).
     p = resample_particles(p, w)
     
-    print eval(myrobot, p)
+    print "quality of work so far: ", eval(myrobot, p)
 
 #print p
