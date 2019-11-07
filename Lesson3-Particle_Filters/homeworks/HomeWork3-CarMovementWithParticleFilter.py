@@ -93,7 +93,6 @@ class robot:
     # move:
     #   move along a section of a circular path according to motion
     #
-    
     def move(self, motion): # Do not change the name of this function
 
         # ADD CODE HERE
@@ -145,7 +144,51 @@ class robot:
         return result # make sure your move function returns an instance
                       # of the robot class with the correct coordinates.
                       
-    ############## ONLY ADD/MODIFY CODE ABOVE HERE ####################
+                      
+    # --------------
+    # USER INSTRUCTIONS
+    #
+    # Write a function in the class robot called sense()
+    # that takes self as input
+    # and returns a list, Z, of the four bearings* to the 4
+    # different landmarks. you will have to use the robot's
+    # x and y position, as well as its orientation, to
+    # compute this.
+    #
+    # *bearing is defined in the video
+    # which accompanies this problem.
+    #
+    # For now, please do NOT add noise to your sense function.
+    #
+    # Please do not modify anything except where indicated
+    # below.
+    #
+    # There are test cases provided at the bottom which you are
+    # free to use. If you uncomment any of these cases for testing
+    # make sure that you re-comment it before you submit.
+
+    # --------
+    # 
+    # the "world" has 4 landmarks.
+    # the robot's initial coordinates are somewhere in the square
+    # represented by the landmarks.
+    #
+    # NOTE: Landmark coordinates are given in (y, x) form and NOT
+    # in the traditional (x, y) format!
+    
+    # --------
+    # sense:
+    #   obtains bearings from positions
+    #
+    
+    def sense(self): #do not change the name of this function
+        Z = []
+
+        # ENTER CODE HERE
+        # HINT: You will probably need to use the function atan2()
+
+        return Z #Leave this line here. Return vector Z of 4 bearings.
+
         
 
 ## IMPORTANT: You may uncomment the test cases below to test your code.
@@ -203,23 +246,23 @@ class robot:
 ##      Robot:     [x=83.736 y=46.485 orient=1.0135]
 ##
 ##
-length = 20.
-bearing_noise  = 0.0
-steering_noise = 0.0
-distance_noise = 0.0
+# length = 20.
+# bearing_noise  = 0.0
+# steering_noise = 0.0
+# distance_noise = 0.0
 
-myrobot = robot(length)
-myrobot.set(0.0, 0.0, 0.0)
-myrobot.set_noise(bearing_noise, steering_noise, distance_noise)
+# myrobot = robot(length)
+# myrobot.set(0.0, 0.0, 0.0)
+# myrobot.set_noise(bearing_noise, steering_noise, distance_noise)
 
-motions = [[0.2, 10.] for row in range(10)]
+# motions = [[0.2, 10.] for row in range(10)]
 
-T = len(motions)
+# T = len(motions)
 
-print 'Robot:    ', myrobot
-for t in range(T):
-   myrobot = myrobot.move(motions[t])
-   print 'Robot:    ', myrobot
+# print 'Robot:    ', myrobot
+# for t in range(T):
+   # myrobot = myrobot.move(motions[t])
+   # print 'Robot:    ', myrobot
 
 ## IMPORTANT: You may uncomment the test cases below to test your code.
 ## But when you submit this code, your test cases MUST be commented
