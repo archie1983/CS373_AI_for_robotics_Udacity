@@ -185,11 +185,18 @@ class robot:
         Z = []
 
         # ENTER CODE HERE
+        # HINT: You will probably need to use the function atan2()
+        #print "landmarks : ", landmarks, self
         for i in range(len(landmarks)):
             cur_landmark = landmarks[i]
-            bearing = atan2(abs(self.y - cur_landmark[0]), abs(self.x - cur_landmark[1])) - self.orientation
+            #print "ra: ", cur_landmark[0] - self.y, " r32: ", cur_landmark[1] - self.x
+            bearing = atan2(cur_landmark[0] - self.y, cur_landmark[1] - self.x) - self.orientation
+            
+            bearing = bearing % (2 * pi) # a very important moment here: The bearing HAS TO BE NORMALIZED, because atan2 function
+                                         # will happily give out negative numbers, which mean angles with (-x) component on the x-y
+                                         # space, but we of course want positive angles from 0 to 2 * pi.
+            
             Z.append(bearing)
-        # HINT: You will probably need to use the function atan2()
 
         return Z #Leave this line here. Return vector Z of 4 bearings.
 
@@ -304,17 +311,17 @@ print 'Measurements: ', myrobot.sense()
 ## 2) The following code should print the list [5.376567117456516, 3.101276726419402, 1.3012484663475101, 0.22364779645531352]
 ##
 ##
-##length = 20.
-##bearing_noise  = 0.0
-##steering_noise = 0.0
-##distance_noise = 0.0
-##
-##myrobot = robot(length)
-##myrobot.set(30.0, 20.0, pi / 5.0)
-##myrobot.set_noise(bearing_noise, steering_noise, distance_noise)
-##
-##print 'Robot:        ', myrobot
-##print 'Measurements: ', myrobot.sense()
+length = 20.
+bearing_noise  = 0.0
+steering_noise = 0.0
+distance_noise = 0.0
+
+myrobot = robot(length)
+myrobot.set(30.0, 20.0, pi / 5.0)
+myrobot.set_noise(bearing_noise, steering_noise, distance_noise)
+
+print 'Robot:        ', myrobot
+print 'Measurements: ', myrobot.sense()
 ##
 
 
