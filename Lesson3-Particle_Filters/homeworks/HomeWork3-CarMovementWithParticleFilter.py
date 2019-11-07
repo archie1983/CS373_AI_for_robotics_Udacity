@@ -185,6 +185,10 @@ class robot:
         Z = []
 
         # ENTER CODE HERE
+        for i in range(len(landmarks)):
+            cur_landmark = landmarks[i]
+            bearing = atan2(abs(self.y - cur_landmark[0]), abs(self.x - cur_landmark[1])) - self.orientation
+            Z.append(bearing)
         # HINT: You will probably need to use the function atan2()
 
         return Z #Leave this line here. Return vector Z of 4 bearings.
