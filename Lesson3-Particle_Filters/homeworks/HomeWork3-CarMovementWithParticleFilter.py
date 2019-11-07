@@ -147,23 +147,23 @@ class robot:
 ##       Robot:     [x=39.034 y=7.1270 orient=0.2886]
 ##
 ##
-length = 20.
-bearing_noise  = 0.0
-steering_noise = 0.0
-distance_noise = 0.0
+# length = 20.
+# bearing_noise  = 0.0
+# steering_noise = 0.0
+# distance_noise = 0.0
 
-myrobot = robot(length)
-myrobot.set(0.0, 0.0, 0.0)
-myrobot.set_noise(bearing_noise, steering_noise, distance_noise)
+# myrobot = robot(length)
+# myrobot.set(0.0, 0.0, 0.0)
+# myrobot.set_noise(bearing_noise, steering_noise, distance_noise)
 
-motions = [[0.0, 10.0], [pi / 6.0, 10], [0.0, 20.0]]
+# motions = [[0.0, 10.0], [pi / 6.0, 10], [0.0, 20.0]]
 
-T = len(motions)
+# T = len(motions)
 
-print 'Robot:    ', myrobot
-for t in range(T):
-   myrobot = myrobot.move(motions[t])
-   print 'Robot:    ', myrobot
+# print 'Robot:    ', myrobot
+# for t in range(T):
+   # myrobot = myrobot.move(motions[t])
+   # print 'Robot:    ', myrobot
 ##
 ##
 
@@ -187,23 +187,23 @@ for t in range(T):
 ##      Robot:     [x=83.736 y=46.485 orient=1.0135]
 ##
 ##
-##length = 20.
-##bearing_noise  = 0.0
-##steering_noise = 0.0
-##distance_noise = 0.0
-##
-##myrobot = robot(length)
-##myrobot.set(0.0, 0.0, 0.0)
-##myrobot.set_noise(bearing_noise, steering_noise, distance_noise)
-##
-##motions = [[0.2, 10.] for row in range(10)]
-##
-##T = len(motions)
-##
-##print 'Robot:    ', myrobot
-##for t in range(T):
-##    myrobot = myrobot.move(motions[t])
-##    print 'Robot:    ', myrobot
+length = 20.
+bearing_noise  = 0.0
+steering_noise = 0.0
+distance_noise = 0.0
+
+myrobot = robot(length)
+myrobot.set(0.0, 0.0, 0.0)
+myrobot.set_noise(bearing_noise, steering_noise, distance_noise)
+
+motions = [[0.2, 10.] for row in range(10)]
+
+T = len(motions)
+
+print 'Robot:    ', myrobot
+for t in range(T):
+   myrobot = myrobot.move(motions[t])
+   print 'Robot:    ', myrobot
 
 ## IMPORTANT: You may uncomment the test cases below to test your code.
 ## But when you submit this code, your test cases MUST be commented
