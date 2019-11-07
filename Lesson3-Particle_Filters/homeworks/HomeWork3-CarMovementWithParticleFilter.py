@@ -99,14 +99,17 @@ class robot:
         # ADD CODE HERE
         # first creating a new robot, which will have the updated state.
         result = robot()
+        result.length = self.length
         distance_to_travel = motion[1]
         steering_angle = motion[0]
         
         turning_angle = (distance_to_travel / self.length) * tan(steering_angle)
-        turning_radius = distance_to_travel / turning_angle
         
         # First the case where steering angle is large enough to take into account - we will be turning while driving.
-        if (motion[0] >= 0.001):
+        if (turning_angle >= 0.001):
+            # first we need turning radius
+            turning_radius = distance_to_travel / turning_angle
+            
             # now update X
             cx = self.x - sin(self.orientation) * turning_radius
             result.x = cx + sin(self.orientation + turning_angle) * turning_radius
@@ -116,7 +119,7 @@ class robot:
             result.y = cy - cos(self.orientation + turning_angle) * turning_radius
             
             # now update orientation
-            result.orientation = (result.orientation + turning_angle) % (2 * pi)
+            result.orientation = (self.orientation + turning_angle) % (2 * pi)
         else:
             # Now the case where steering angle is tiny and we can just update the position based on the current orientation
             result.x = self.x + distance_to_travel * cos(self.orientation)
@@ -144,23 +147,23 @@ class robot:
 ##       Robot:     [x=39.034 y=7.1270 orient=0.2886]
 ##
 ##
-##length = 20.
-##bearing_noise  = 0.0
-##steering_noise = 0.0
-##distance_noise = 0.0
-##
-##myrobot = robot(length)
-##myrobot.set(0.0, 0.0, 0.0)
-##myrobot.set_noise(bearing_noise, steering_noise, distance_noise)
-##
-##motions = [[0.0, 10.0], [pi / 6.0, 10], [0.0, 20.0]]
-##
-##T = len(motions)
-##
-##print 'Robot:    ', myrobot
-##for t in range(T):
-##    myrobot = myrobot.move(motions[t])
-##    print 'Robot:    ', myrobot
+length = 20.
+bearing_noise  = 0.0
+steering_noise = 0.0
+distance_noise = 0.0
+
+myrobot = robot(length)
+myrobot.set(0.0, 0.0, 0.0)
+myrobot.set_noise(bearing_noise, steering_noise, distance_noise)
+
+motions = [[0.0, 10.0], [pi / 6.0, 10], [0.0, 20.0]]
+
+T = len(motions)
+
+print 'Robot:    ', myrobot
+for t in range(T):
+   myrobot = myrobot.move(motions[t])
+   print 'Robot:    ', myrobot
 ##
 ##
 
