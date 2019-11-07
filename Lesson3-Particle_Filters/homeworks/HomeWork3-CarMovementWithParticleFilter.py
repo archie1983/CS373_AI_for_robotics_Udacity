@@ -97,11 +97,27 @@ class robot:
     def move(self, motion): # Do not change the name of this function
 
         # ADD CODE HERE
-        # first creating a new robot, which will have the updated state.
-        result = robot()
-        result.length = self.length
         distance_to_travel = motion[1]
         steering_angle = motion[0]
+        
+        # before anything else, let's add some input checks
+        if abs(steering_angle) > max_steering_angle:
+            raise ValueError, 'Exceeding max steering angle'
+            
+        if distance_to_travel < 0.0:
+            raise ValueError, 'Moving backwards is not valid'
+        
+        # first creating a new robot, which will have the updated state.
+        result = robot()
+        # we want to copy the input robots length and noise parameters.
+        result.length = self.length
+        result.bearing_noise = self.bearing_noise
+        result.steering_noise = self.steering_noise
+        result.distance_noise = self.distance_noise
+        
+        # now let's apply noise
+        steering_angle = random.gauss(steering_angle, self.steering_noise)
+        distance_to_travel = random.gauss(distance_to_travel, self.distance_noise)
         
         turning_angle = (distance_to_travel / self.length) * tan(steering_angle)
         
@@ -119,12 +135,12 @@ class robot:
             result.y = cy - cos(self.orientation + turning_angle) * turning_radius
             
             # now update orientation
-            result.orientation = (self.orientation + turning_angle) % (2 * pi)
+            result.orientation = (self.orientation + turning_angle) % (2.0 * pi)
         else:
             # Now the case where steering angle is tiny and we can just update the position based on the current orientation
             result.x = self.x + distance_to_travel * cos(self.orientation)
             result.y = self.y + distance_to_travel * sin(self.orientation)
-            result.orientation = (self.orientation + turning_angle) % (2 * pi)
+            result.orientation = (self.orientation + turning_angle) % (2.0 * pi)
             
         return result # make sure your move function returns an instance
                       # of the robot class with the correct coordinates.
