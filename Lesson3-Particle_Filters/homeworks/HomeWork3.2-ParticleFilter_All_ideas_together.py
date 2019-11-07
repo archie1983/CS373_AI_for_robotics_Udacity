@@ -227,7 +227,10 @@ class robot:
 #
 # extract position from a particle set
 # 
-
+# AE: This function averages x, y and orientation of all particles and that then
+# AE: can serve as our best approximation of where our robot is at the given time.
+# AE: After we've made another step and filtered out particles (re-sampled), then
+# AE: we can generate a new aggregate position with this function.
 def get_position(p):
     x = 0.0
     y = 0.0
@@ -247,8 +250,10 @@ def get_position(p):
 # The following code generates the measurements vector
 # You can use it to develop your solution.
 # 
-
-
+# AE: This function initiates a random robot, moves it through the list of passed motions
+# AE: and takes mesurements with each movement. In the end we have a set of measurements and
+# AE: a robot at the final position. We can then use that to compare it to our estimated_position
+# AE: movement with particle filter.
 def generate_ground_truth(motions):
 
     myrobot = robot()
