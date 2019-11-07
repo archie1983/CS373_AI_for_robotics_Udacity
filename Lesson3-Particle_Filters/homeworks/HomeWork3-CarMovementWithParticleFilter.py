@@ -97,7 +97,32 @@ class robot:
     def move(self, motion): # Do not change the name of this function
 
         # ADD CODE HERE
+        # first creating a new robot, which will have the updated state.
+        result = robot()
+        distance_to_travel = motion[1]
+        steering_angle = motion[0]
         
+        turning_angle = (distance_to_travel / self.length) * tan(steering_angle)
+        turning_radius = distance_to_travel / turning_angle
+        
+        # First the case where steering angle is large enough to take into account - we will be turning while driving.
+        if (motion[0] >= 0.001):
+            # now update X
+            cx = self.x - sin(self.orientation) * turning_radius
+            result.x = cx + sin(self.orientation + turning_angle) * turning_radius
+            
+            # now update Y
+            cy = self.y + cos(self.orientation) * turning_radius
+            result.y = cy - cos(self.orientation + turning_angle) * turning_radius
+            
+            # now update orientation
+            result.orientation = (result.orientation + turning_angle) % (2 * pi)
+        else:
+            # Now the case where steering angle is tiny and we can just update the position based on the current orientation
+            result.x = self.x + distance_to_travel * cos(self.orientation)
+            result.y = self.y + distance_to_travel * sin(self.orientation)
+            result.orientation = (self.orientation + turning_angle) % (2 * pi)
+            
         return result # make sure your move function returns an instance
                       # of the robot class with the correct coordinates.
                       
