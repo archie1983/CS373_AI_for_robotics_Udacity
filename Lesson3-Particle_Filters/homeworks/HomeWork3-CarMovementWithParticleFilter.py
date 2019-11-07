@@ -181,7 +181,7 @@ class robot:
     #   obtains bearings from positions
     #
     
-    def sense(self): #do not change the name of this function
+    def sense(self, add_noise = 1): #do not change the name of this function
         Z = []
 
         # ENTER CODE HERE
@@ -191,6 +191,9 @@ class robot:
             cur_landmark = landmarks[i]
             #print "ra: ", cur_landmark[0] - self.y, " r32: ", cur_landmark[1] - self.x
             bearing = atan2(cur_landmark[0] - self.y, cur_landmark[1] - self.x) - self.orientation
+            
+            if (add_noise):
+                bearing += random.gauss(0.0, self.bearing_noise)
             
             bearing = bearing % (2 * pi) # a very important moment here: The bearing HAS TO BE NORMALIZED, because atan2 function
                                          # will happily give out negative numbers, which mean angles with (-x) component on the x-y
