@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/python
 
 # --------------
 # USER INSTRUCTIONS
@@ -40,6 +40,42 @@ def stochastic_value(grid,goal,cost_step,collision_cost,success_prob):
     failure_prob = (1.0 - success_prob)/2.0 # Probability(stepping left) = prob(stepping right) = failure_prob
     value = [[collision_cost for col in range(len(grid[0]))] for row in range(len(grid))]
     policy = [[' ' for col in range(len(grid[0]))] for row in range(len(grid))]
+    
+    # AE: Ok, so what we're going to do now, is first calculate normal g-values,
+    # AE: then pick a random start point (probably just [0, 0]) and recalculate
+    # AE: everything with stochastic movement probabilities. Then do it again
+    # AE: and again until there are no more changes to the grid. Then we'll have
+    # AE: value matrix.
+    # AE:
+    # AE: So- first the usual breadth-first search and g-values:
+    cell_queue = []
+    start_cell = goal
+    cell_queue.append(start_cell)
+    value[goal[0]][goal[1]] = 0
+    visited = [[0 for col in range(len(grid[0]))] for row in range(len(grid))]
+    
+    while len(cell_queue) > 0:
+        cur_cell = cell_queue.pop(0)
+        cur_y = cur_cell[0]
+        cur_x = cur_cell[1]
+        cur_value = value[cur_y][cur_x]
+        visited[cur_y][cur_x] = 1
+        
+        # AE: now go through all actions
+        for ac in range(len(delta)):
+            cur_action = delta[ac]
+            new_y = cur_y + cur_action[0]
+            new_x = cur_x + cur_action[1]
+
+            if (new_y < len(grid) and
+                new_y >= 0 and
+                new_x < len(grid[0]) and
+                new_x >= 0 and
+                grid[new_y][new_x] != 1 and
+                visited[new_y][new_x] != 1):
+                
+                cell_queue.append([new_y, new_x])
+                value[new_y][new_x] = cur_value + cost_step
     
     return value, policy
 
