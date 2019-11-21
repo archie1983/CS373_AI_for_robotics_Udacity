@@ -93,7 +93,7 @@ def stochastic_value(grid,goal,cost_step,collision_cost,success_prob):
 
         # AE: Other than we run it until precision is ok, it's just a normal breadth-first-search.
         cell_queue = []
-        start_cell = [2, 2] # can be any valid cell
+        start_cell = [0, 0] # can be any valid cell
         cell_queue.append(start_cell)
         #value[goal[0]][goal[1]] = 0
         visited = [[0 for col in range(len(grid[0]))] for row in range(len(grid))]
@@ -148,13 +148,13 @@ def stochastic_value(grid,goal,cost_step,collision_cost,success_prob):
                         total_action_value += cur_action_value * success_prob
                     else:
                         total_action_value += cur_action_value * failure_prob
-
-                # AE: The total_action_value will also contain the cost for making the move
-                #total_action_value += cost_step
                 
                 # AE: If this new total_action_value is less than the value for previous move, then let's take it as a candidate
                 # AE: for updating the current g-value.
                 if new_g_value > total_action_value:
+                    # debug:
+                    #if ([cur_y, cur_x] == [0, 2]):
+                    #    print([cur_y, cur_x], " ", delta_name[ac], " old_val = ", new_g_value, " new_val = ", total_action_value)
                     new_g_value = total_action_value
                     policy[cur_y][cur_x] = delta_name[ac]
                 #print "ate: ", actions_to_explore, " new_g_value=", new_g_value
@@ -195,6 +195,22 @@ def stochastic_value(grid,goal,cost_step,collision_cost,success_prob):
 #  Use the code below to test your solution
 # ---------------------------------------------
 
+grid = [[0, 1, 0],
+        [0, 0, 0]]
+goal = [0, len(grid[0])-1] # Goal is in top right corner
+cost_step = 1
+collision_cost = 100
+success_prob = 0.5
+
+grid = [[0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 1, 1, 0]]
+goal = [0, len(grid[0])-1] # Goal is in top right corner
+cost_step = 1
+collision_cost = 100
+success_prob = 0.5
+
 grid = [[0, 0, 0, 1, 0, 0, 0],
         [0, 1, 0, 0, 0, 1, 0],
         [0, 1, 1, 0, 1, 1, 0],
@@ -204,15 +220,6 @@ goal = [0, 6]
 cost_step = 1
 collision_cost = 100
 success_prob = 0.8
-
-grid = [[0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 1, 1, 0]]
-goal = [0, len(grid[0])-1] # Goal is in top right corner
-cost_step = 1
-collision_cost = 1000
-success_prob = 0.5
 
 value,policy = stochastic_value(grid,goal,cost_step,collision_cost,success_prob)
 for row in value:
