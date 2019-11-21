@@ -83,7 +83,7 @@ def stochastic_value(grid,goal,cost_step,collision_cost,success_prob):
     # AE: no more updates happen.
     # AE:
     # AE: When there are no more changes in the values greater than this, then we'll stop
-    max_allowed_change = 0.001
+    max_allowed_change = 0.0001
     greatest_change_last_seen = max_allowed_change
     value[goal[0]][goal[1]] = 0
     
@@ -93,7 +93,7 @@ def stochastic_value(grid,goal,cost_step,collision_cost,success_prob):
 
         # AE: Other than we run it until precision is ok, it's just a normal breadth-first-search.
         cell_queue = []
-        start_cell = [2, 3]
+        start_cell = [2, 2] # can be any valid cell
         cell_queue.append(start_cell)
         #value[goal[0]][goal[1]] = 0
         visited = [[0 for col in range(len(grid[0]))] for row in range(len(grid))]
@@ -137,9 +137,10 @@ def stochastic_value(grid,goal,cost_step,collision_cost,success_prob):
                         new_x >= 0 and
                         grid[new_y][new_x] != 1):
                         
+                        # AE: The total_action_value will also contain the cost for making the move.
                         cur_action_value = value[new_y][new_x] + cost_step
-                    else: # but if this action brings us off the world or onto an obstacle, then the value of it is the penalty
-                        cur_action_value = collision_cost
+                    else: # but if this action brings us off the world or onto an obstacle, then the value of it is the penalty + cost_step
+                        cur_action_value = collision_cost + cost_step
 
                     # AE: At this point we now know what this potential action would cost us, we can add that with the given probability
                     # AE: to the total action cost.
@@ -149,12 +150,13 @@ def stochastic_value(grid,goal,cost_step,collision_cost,success_prob):
                         total_action_value += cur_action_value * failure_prob
 
                 # AE: The total_action_value will also contain the cost for making the move
-                total_action_value += cost_step
+                #total_action_value += cost_step
                 
                 # AE: If this new total_action_value is less than the value for previous move, then let's take it as a candidate
                 # AE: for updating the current g-value.
                 if new_g_value > total_action_value:
                     new_g_value = total_action_value
+                    policy[cur_y][cur_x] = delta_name[ac]
                 #print "ate: ", actions_to_explore, " new_g_value=", new_g_value
                 
             # AE: Now we have found the best move and its cost. That will then be the new g-value of this cell.
@@ -164,6 +166,7 @@ def stochastic_value(grid,goal,cost_step,collision_cost,success_prob):
 
             # AE: Updating the g-value
             value[cur_y][cur_x] = new_g_value
+
             #print("value[",cur_y,"][",cur_x,"] = ", new_g_value)
             
             # AE: Now I'll add the neighbouring cells to the queue so they too get looked at.
@@ -181,14 +184,26 @@ def stochastic_value(grid,goal,cost_step,collision_cost,success_prob):
                     visited[new_y][new_x] != 1):
                     
                     cell_queue.append([new_y, new_x])
-                    print("cq: ", cell_queue) 
+                    #print("cq: ", cell_queue) 
 
-        print "greatest change seen this cycle : ", greatest_change_last_seen
+        #print "greatest change seen this cycle : ", greatest_change_last_seen
+
+    policy[goal[0]][goal[1]] = "*"
     return value, policy
 
 # ---------------------------------------------
 #  Use the code below to test your solution
 # ---------------------------------------------
+
+grid = [[0, 0, 0, 1, 0, 0, 0],
+        [0, 1, 0, 0, 0, 1, 0],
+        [0, 1, 1, 0, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 0],
+        [0, 0, 0, 0, 0, 0, 0]]
+goal = [0, 6]
+cost_step = 1
+collision_cost = 100
+success_prob = 0.8
 
 grid = [[0, 0, 0, 0],
         [0, 0, 0, 0],
