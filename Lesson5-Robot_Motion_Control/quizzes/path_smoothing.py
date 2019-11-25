@@ -39,9 +39,26 @@ def smooth(path, weight_data = 0.5, weight_smooth = 0.1, tolerance = 0.000001):
     # Make a deep copy of path into newpath
     newpath = deepcopy(path)
 
-    #######################
-    ### ENTER CODE HERE ###
-    #######################
+    # AE: We're going to loop until last change seen is smaller than the tolerance.
+    last_change_seen = tolerance
+    while last_change_seen >= tolerance:
+        last_change_seen = 0. # AE: We'll be collecting the change later.
+        
+        # AE: We need to loop through all elements in the path excepth the first and last ones.
+        for i in range(1, len(newpath) - 1):
+            # AE: Gradient Descent update.
+            # AE: In essence: newpath[i] = newpath[i] + weight_data * (path[i] - newpath[i]) + weight_smooth * (newpath[i + 1] + newpath[i - 1] - 2 * newpath[i])
+            cur_point = newpath[i]
+            new_point_x = newpath[i][0] + weight_data * (path[i][0] - newpath[i][0]) + weight_smooth * (newpath[i + 1][0] + newpath[i - 1][0] - 2 * newpath[i][0])
+            new_point_y = newpath[i][1] + weight_data * (path[i][1] - newpath[i][1]) + weight_smooth * (newpath[i + 1][1] + newpath[i - 1][1] - 2 * newpath[i][1])
+            
+            if (new_point_x - cur_point[0] > last_change_seen):
+                last_change_seen = new_point_x - cur_point[0]
+                
+            if (new_point_y - cur_point[1] > last_change_seen):
+                last_change_seen = new_point_y - cur_point[1]
+            
+            newpath[i] = [new_point_x, new_point_y]
     
     return newpath # Leave this line for the grader!
 
